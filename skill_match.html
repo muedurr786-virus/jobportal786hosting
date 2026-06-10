@@ -1,0 +1,31 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for item in jobs %}
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900">{{ item.titel }}</h3>
+                    <p class="text-xs text-blue-600 font-semibold uppercase mt-1">{{ item.category }}</p>
+                    <div class="mt-4 flex flex-wrap gap-1.5">
+                        {% for skill in item.skill_set.all %}
+                            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">{{ skill.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="mt-6 pt-4 border-t border-gray-100">
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-sm font-semibold transition">
+                        Quick Apply
+                    </button>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-span-full bg-white p-12 rounded-lg text-center border border-gray-200">
+                <p class="text-gray-500">No matching jobs found right now based on active listings.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

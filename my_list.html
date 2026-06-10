@@ -1,0 +1,71 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2 class="mb-4 fw-bold">My Applications</h2>
+
+    <div class="row">
+
+        {% for i in myapplication %}
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body">
+
+                    <h4 class="text-primary fw-bold">
+                        {{ i.job.company }}
+                    </h4>
+
+                    <p>
+                        <strong>Category:</strong>
+                        {{ i.job.category }}
+                    </p>
+
+                    <p>
+                        <strong>Location:</strong>
+                        {{ i.job.address }}
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+
+                        {% if i.status == 'Pending' %}
+                            <span class="badge bg-warning text-dark">
+                                Pending
+                            </span>
+
+                        {% elif i.status == 'Shorlist' %}
+                            <span class="badge bg-success">
+                                Shortlisted
+                            </span>
+
+                        {% else %}
+                            <span class="badge bg-danger">
+                                Rejected
+                            </span>
+                        {% endif %}
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                No Applications Yet
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

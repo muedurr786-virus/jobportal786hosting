@@ -1,0 +1,40 @@
+  <form method="POST" class="space-y-4">
+        {% csrf_token %}
+        
+        <!-- Field rendering loop with tailored styling -->
+        {% for field in form %}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+                <!-- Standard Django form field injection -->
+                <div class="[&_input]:w-full [&_input]:p-2.5 [&_input]:border [&_input]:border-gray-300 [&_input]:rounded-md [&_input]:shadow-sm [&_input]:focus:ring-blue-500 [&_input]:focus:border-blue-500 [&_select]:w-full [&_select]:p-2.5 [&_select]:border [&_select]:border-gray-300 [&_select]:rounded-md">
+                    {{ field }}
+                </div>
+                {% if field.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        {% if form.non_field_errors %}
+            <div class="bg-red-50 p-3 rounded text-red-700 text-sm">
+                {{ form.non_field_errors.0 }}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-md shadow transition duration-150 ease-in-out cursor-pointer mt-4">
+            {{ btn }}
+        </button>
+    </form>
+    
+    {% if Form_titel == 'Login Page' %}
+        <p class="text-center text-sm text-gray-600 mt-4">
+            Don't have an account? <a href="{% url 'register' %}" class="text-blue-600 hover:underline">Register here</a>
+        </p>
+    {% elif Form_titel == 'Register Page' %}
+        <p class="text-center text-sm text-gray-600 mt-4">
+            Already have an account? <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Login here</a>
+        </p>
+    {% endif %}
+</div>

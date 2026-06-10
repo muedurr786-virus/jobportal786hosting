@@ -1,0 +1,201 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+{% csrf_token %}
+
+<!-- ========================================== -->
+<!-- RECRUITER DASHBOARD                        -->
+<!-- ========================================== -->
+{% if request.user.user_type == 'Recuiter' %}
+
+<!-- Profile Overview Card & Quick Actions -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm bg-gradient-to-r text-white" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); border-radius: 16px;">
+            <div class="card-body p-4">
+                <div class="d-md-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center mb-3 mb-md-0">
+                        <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center shadow-sm" style="width: 60px; height: 60px; font-size: 24px;">
+                            🏢
+                        </div>
+                        <div class="ms-3">
+                            <h3 class="fw-bold mb-0">Welcome Back, Recruiter!</h3>
+                            <p class="mb-0 text-white-50 small">Manage your active job postings and track incoming applicant submissions.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'recruiter' %}" class="btn btn-light text-primary fw-semibold px-4 shadow-sm">
+                            ⚙️ Edit Profile
+                        </a>
+                        <a href="{% url 'applicationlist' %}" class="btn btn-primary bg-blue-700 border-0 fw-semibold px-4 shadow-sm">
+                            📄 Inbox ({{ job.count|default:"0" }})
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Feed Section Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Your Posted Openings</h2>
+        <p class="text-muted small mb-0">Below are the jobs you currently have active on the portal.</p>
+    </div>
+    <a href="{% url 'job_post' %}" class="btn btn-success fw-bold px-4 py-2 shadow-sm rounded-pill">
+        + Post New Job
+    </a>
+</div>
+
+<!-- Grid List -->
+<div class="row">
+    {% for i in job %}
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-0 h-100 hover-card">
+            <div class="card-body">
+                <h4 class="card-title text-primary fw-bold mb-3">
+                    {{ i.company }}
+                </h4>
+                <div class="space-y-2 text-secondary small">
+                    <p class="mb-2"><strong>📍 Location:</strong> {{ i.address }}</p>
+                    <p class="mb-2"><strong>💼 Category:</strong> {{ i.category }}</p>
+                    <p class="mb-2"><strong>👥 Openings:</strong> <span class="badge bg-secondary-subtle text-secondary border px-2.5 py-1">{{ i.number_opening }} vacancies</span></p>
+                </div>
+                <hr class="text-gray-200 my-3">
+                <p class="mb-3">
+                    <strong>Description:</strong><br>
+                    <span class="text-muted small">{{ i.discription|truncatewords:20 }}</span>
+                </p>
+                <div>
+                    <strong class="small d-block mb-1 text-dark">Required Skills:</strong>
+                    <div class="d-flex flex-wrap gap-1">
+                        {% for skill in i.skill_set.all %}
+                            <span class="badge bg-light text-dark border px-2 py-1">{{ skill.name }}</span>
+                        {% empty %}
+                            <span class="text-muted small italic">Generic Requirement</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-0 pt-0 pb-3">
+                <a href="{% url 'applicationlist' %}" class="btn btn-outline-primary btn-sm w-100 fw-semibold py-2">
+                    View Applied Applicants &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-warning border-0 shadow-sm text-center py-5">
+            <span style="font-size: 2rem;">📂</span>
+            <h5 class="fw-bold mt-2 text-warning-emphasis">No Jobs Posted Yet</h5>
+            <p class="text-muted mb-0 small">Get started by creating your very first job vacancy pipeline listing above.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+<!-- ========================================== -->
+<!-- JOB SEEKER DASHBOARD                       -->
+<!-- ========================================== -->
+{% if request.user.user_type == 'JobSeeker' %}
+
+<!-- Profile Overview Card & Quick Actions -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm bg-gradient-to-r text-white" style="background: linear-gradient(135deg, #065f46, #10b981); border-radius: 16px;">
+            <div class="card-body p-4">
+                <div class="d-md-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center mb-3 mb-md-0">
+                        <div class="rounded-circle bg-white text-success d-flex align-items-center justify-content-center shadow-sm" style="width: 60px; height: 60px; font-size: 24px;">
+                            💼
+                        </div>
+                        <div class="ms-3">
+                            <h3 class="fw-bold mb-0">Welcome Back, {{ request.user.username }}!</h3>
+                            <p class="mb-0 text-white-50 small">Explore new career job vacancies or configure your candidate skills list.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'jobseeker' %}" class="btn btn-light text-success fw-semibold px-4 shadow-sm">
+                            👤 Complete Profile
+                        </a>
+                        <a href="{% url 'my_applications' %}" class="btn btn-success bg-emerald-700 border-0 fw-semibold px-4 shadow-sm">
+                            🎯 Track Applied Jobs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Feed Section Header -->
+<div class="mb-4">
+    <h2 class="fw-bold text-dark mb-1">Available Marketplace Openings</h2>
+    <p class="text-muted small">Find and connect directly with hiring managers currently listing openings on our network.</p>
+</div>
+
+<!-- Grid List -->
+<div class="row">
+    {% for i in job %}
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-0 h-100 hover-card">
+            <div class="card-body">
+                <h4 class="card-title text-success fw-bold mb-3">
+                    {{ i.company }}
+                </h4>
+                <div class="space-y-2 text-secondary small">
+                    <p class="mb-2"><strong>📍 Office Location:</strong> {{ i.address }}</p>
+                    <p class="mb-2"><strong>🏷️ Category Type:</strong> {{ i.category }}</p>
+                    <p class="mb-2"><strong>🔥 Available Slots:</strong> <span class="badge bg-success-subtle text-success border px-2.5 py-1">{{ i.number_opening }} Roles</span></p>
+                </div>
+                <hr class="text-gray-200 my-3">
+                <p class="mb-3">
+                    <strong>Job Specification:</strong><br>
+                    <span class="text-muted small">{{ i.discription|truncatewords:20 }}</span>
+                </p>
+                <div>
+                    <strong class="small d-block mb-1 text-dark">Target Core Skills Required:</strong>
+                    <div class="d-flex flex-wrap gap-1">
+                        {% for skill in i.skill_set.all %}
+                            <span class="badge bg-light text-dark border px-2 py-1">{{ skill.name }}</span>
+                        {% empty %}
+                            <span class="text-muted small italic">Open Requirements</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-0 pt-0">
+                <a href="{% url 'apply_job' i.id %}" class="btn btn-success btn-sm w-100 fw-bold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2">
+                    🚀 Apply 
+                    </a>
+        </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info border-0 shadow-sm text-center py-5">
+            <span style="font-size: 2rem;">🔍</span>
+            <h5 class="fw-bold mt-2 text-info-emphasis">No Active Listings Currently</h5>
+            <p class="text-muted mb-0 small">Please check back later or adjust your preference matrix feeds.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Add custom styling to make the grid elements pop visually -->
+<style>
+    .hover-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    }
+</style>
+
+{% endblock %}
